@@ -1,21 +1,28 @@
-import { StatusBar } from 'expo-status-bar'
-import { Text, View, Image, ScrollView } from 'react-native'
-import { Redirect, router } from 'expo-router'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from "expo-status-bar";
+import { Redirect, router } from "expo-router";
+import { View, Text, Image, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import {images} from '../constants'
-import CustomButton from '../components/CustomButton'
+import { images } from "../constants";
+import CustomButton from "../components/CustomButton";
+import Loader from "../components/Loader";
+import { useGlobalContext } from "../context/globalProvider";
 
-const index = () => {
+const Welcome = () => {
+  const { loading, isLogged } = useGlobalContext();
+
+  if (!loading && isLogged) return <Redirect href="/Home" />;
+
   return (
     <SafeAreaView className="bg-primary h-full">
+      <Loader isLoading={loading} />
 
       <ScrollView
         contentContainerStyle={{
           height: "100%",
         }}
       >
-        <View className="w-full flex justify-center items-center h-[85vh] px-4">
+        <View className="w-full flex justify-center items-center h-full px-4">
           <Image
             source={images.logo}
             className="w-[130px] h-[84px]"
@@ -47,14 +54,17 @@ const index = () => {
             Exploration with Aora
           </Text>
 
-          <CustomButton title="Continue with Email" handlePress={()=> router.push("/SignIn")} containerStyles="w-full mt-7" />
-
+          <CustomButton
+            title="Continue with Email"
+            handlePress={() => router.push("/SignIn")}
+            containerStyles="w-full mt-7"
+          />
         </View>
       </ScrollView>
 
-      <StatusBar backgroundColor='#161622' style="light" />
+      <StatusBar backgroundColor="#161622" style="light" />
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default index
+export default Welcome;
